@@ -134,7 +134,38 @@ class TweetAnalyzer():
         return df
 
 
+def get_elons_tweets():
+    # Authenticate using config.py and connect to Twitter Streaming API.
+    twitter_client = TwitterClient()
+    tweet_analyzer = TweetAnalyzer()
+    api = twitter_client.get_twitter_client_api() # Tweepy API
+
+    # Aggregate tweets from relevant user accounts
+
+    # Tesla DF
+    tweets = api.user_timeline(screen_name='tesla', count=1)
+    # tweets = twitter_client.get_user_timeline_tweets(10)
+    tesla_df = tweet_analyzer.tweets_to_data_frame(tweets)
+    tesla_df['sentiment'] = np.array([tweet_analyzer.analyze_sentiment(tweet) for tweet in tesla_df['Tweets']])
+
+    # Elon Musk DF
+    tweets = api.user_timeline(screen_name='elonmusk', count=1)
+    # tweets = twitter_client.get_user_timeline_tweets(10)
+    elon_df = tweet_analyzer.tweets_to_data_frame(tweets)
+    elon_df['sentiment'] = np.array([tweet_analyzer.analyze_sentiment(tweet) for tweet in elon_df['Tweets']])
+
+    # SpaceX DF
+    tweets = api.user_timeline(screen_name='spacex', count=1)
+    # tweets = twitter_client.get_user_timeline_tweets(10)
+    SpaceX_df = tweet_analyzer.tweets_to_data_frame(tweets)
+    SpaceX_df['sentiment'] = np.array([tweet_analyzer.analyze_sentiment(tweet) for tweet in SpaceX_df['Tweets']])
+
+    # Concat relevant DFs
+    final_df = pd.concat([tesla_df,elon_df,SpaceX_df], axis=0)
+    return final_df
+
 if __name__ == "__main__":
+    
     # Authenticate using config.py and connect to Twitter Streaming API.
     twitter_client = TwitterClient()
     tweet_analyzer = TweetAnalyzer()
