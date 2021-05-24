@@ -9,6 +9,8 @@
 - Advanced algorithm to minimize execution slippage
 - Additional statistics to improve execution performance
 - Portfolio management to analyze open positions
+- VWAP execution algorithm
+- PAIRS execution algorithm based on statistical arbitrage vs other crypto pairs
 
 ## Getting Started
 - Clone this repository
