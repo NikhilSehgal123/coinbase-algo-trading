@@ -48,9 +48,33 @@ class TextWebsocketClient(cbpro.WebsocketClient):
 ```
 - We place a market order, worth $1,000, to buy BTC if Elon says something pretty +ve about it
 ```python
-class TextWebsocketClient(cbpro.WebsocketClient):
-    def on_open(self):
-        self.url           = 'wss://ws-feed-public.sandbox.pro.coinbase.com'
-        self.message_count = 0
-        self.initial_date = datetime.now()
+# ------------------------
+# Trade based on the below
+# ------------------------
+
+# Get df with Elon's related tweets from
+df = get_elons_tweets()
+# Filter the df to listen out for upcoming tweets
+filtered_df = df[(df['date'] > self.initial_date) & (df['crypto_mention'] == True)]
+
+if len(filtered_df) < 1:
+    print('Nothing to look for yet')
+else:
+    # Get average polarity
+    sentiment_array = np.array(filtered_df['sentiment'])
+    average_polarity = np.mean(sentiment_array)
+
+    # Check if the statements are +ve enough
+    if average_polarity > 0.6:
+        # Send a buy order to coinbase for $1000 of bitcoin
+        # # Authenticated Client
+        url='https://api-public.sandbox.pro.coinbase.com'
+
+        client = cbpro.AuthenticatedClient(
+            api_key,
+            api_secret,
+            api_pass,
+            api_url=url
+        )
+        client.place_market_order(product_id='BTC-USD',side='buy',funds=1000)
 ```
