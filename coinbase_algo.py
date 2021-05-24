@@ -1,7 +1,7 @@
 import cbpro
 from slacker import Slacker
 from datetime import datetime
-slack = Slacker('xoxb-2078533751079-2093419260002-lPKnfTFHqB0p3WBmTvM9Rbnd')
+slack = Slacker('')
 from coinbase_creds import api_key, api_secret, api_pass
 from streamer import get_elons_tweets
 import numpy as np
